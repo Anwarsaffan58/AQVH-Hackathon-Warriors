@@ -1,7 +1,7 @@
 """
 PROJECT: Amaravati Quantum Valley Hackathon 2025
 PROBLEM STATEMENT: AQVH910 - Design a basic QRNG using a quantum circuit.
-TEAM: Quantum Shield
+TEAM: Hackathon Warriors
 AUTHOR: Saffan
 
 DESCRIPTION:
@@ -98,4 +98,5 @@ if __name__ == "__main__":
     # 5. Proof of Randomness
     demonstrate_proof_of_randomness(simulator, qc)
     
+
     print("\n--- DEMO COMPLETE ---")
