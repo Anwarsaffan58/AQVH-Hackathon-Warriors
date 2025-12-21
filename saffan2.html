@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Cryptography Security Demonstration</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <header class="header">
+            <div class="container">
+                <h1 class="header-title">Quantum Cryptography Security Demonstration</h1>
+                <p class="header-subtitle">A hackathon demonstration of quantum security vs classical vulnerabilities</p>
+                
+                <!-- Global Demo Controls in Header -->
+                <div class="demo-controls-header">
+                    <button class="btn btn--primary btn--lg" id="full-demo">🚀 Start Complete Demonstration</button>
+                    <button class="btn btn--outline" id="reset-demo">🔄 Reset All</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <div class="container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="rsa-vulnerability">RSA Vulnerability</button>
+                    <button class="tab-btn" data-tab="shors-algorithm">Shor's Algorithm</button>
+                    <button class="tab-btn" data-tab="e91-protocol">E91 QKD Protocol</button>
+                    <button class="tab-btn" data-tab="ai-security">AI Security</button>
+                    <button class="tab-btn" data-tab="secure-communication">Secure Communication</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="container">
+                
+                <!-- RSA Vulnerability Tab -->
+                <div class="tab-content active" id="rsa-vulnerability">
+                    <div class="demo-section">
+                        <h2>RSA Encryption Vulnerability Demo</h2>
+                        <div class="demo-grid">
+                            <div class="demo-card">
+                                <h3>RSA Key Generation</h3>
+                                <div class="key-display">
+                                    <div class="key-item">
+                                        <label>Public Key (n, e):</label>
+                                        <span id="rsa-public-key">(2263, 7)</span>
+                                    </div>
+                                    <div class="key-item">
+                                        <label>Private Key (n, d):</label>
+                                        <span id="rsa-private-key">(2263, 1543)</span>
+                                    </div>
+                                    <div class="key-item">
+                                        <label>Factors of n:</label>
+                                        <span id="rsa-factors">31 × 73</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn--primary" id="generate-rsa-keys">Generate New Keys</button>
+                            </div>
+
+                            <div class="demo-card">
+                                <h3>Message Encryption</h3>
+                                <div class="encryption-demo">
+                                    <div class="message-item">
+                                        <label>Original Message:</label>
+                                        <span id="original-message">7</span>
+                                    </div>
+                                    <div class="message-item">
+                                        <label>Encrypted:</label>
+                                        <span id="encrypted-message">2074</span>
+                                    </div>
+                                    <div class="message-item">
+                                        <label>Decrypted:</label>
+                                        <span id="decrypted-message">7</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn--secondary" id="encrypt-message">Encrypt Message</button>
+                            </div>
+                        </div>
+
+                        <div class="attack-simulation">
+                            <h3>Attack Time Complexity Comparison</h3>
+                            <div class="attack-grid">
+                                <div class="attack-card classical">
+                                    <h4>Classical Attack</h4>
+                                    <div class="time-complexity">O(e^n)</div>
+                                    <div class="attack-status" id="classical-status">Ready</div>
+                                    <button class="btn btn--outline" id="classical-attack">Attempt Classical Break</button>
+                                </div>
+                                <div class="attack-card quantum">
+                                    <h4>Quantum Attack (Shor's)</h4>
+                                    <div class="time-complexity">O(n³)</div>
+                                    <div class="attack-status" id="quantum-status">Ready</div>
+                                    <button class="btn btn--primary" id="quantum-attack">Simulate Quantum Attack</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shor's Algorithm Tab -->
+                <div class="tab-content" id="shors-algorithm">
+                    <div class="demo-section">
+                        <h2>Shor's Algorithm: Breaking RSA</h2>
+                        <div class="algorithm-visualization">
+                            <div class="steps-container">
+                                <h3>Algorithm Steps</h3>
+                                <div class="steps-list" id="shors-steps">
+                                    <!-- Steps will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <div class="quantum-circuit">
+                                <h3>Quantum Circuit Simulation</h3>
+                                <div class="circuit-container">
+                                    <div class="circuit-visual" id="quantum-circuit">
+                                        <div class="qubit-line">
+                                            <span class="qubit-label">|0⟩</span>
+                                            <div class="gate" data-gate="H">H</div>
+                                            <div class="gate" data-gate="U">U</div>
+                                            <div class="gate" data-gate="QFT">QFT†</div>
+                                            <div class="measurement">📏</div>
+                                        </div>
+                                        <div class="qubit-line">
+                                            <span class="qubit-label">|0⟩</span>
+                                            <div class="gate" data-gate="X">X</div>
+                                            <div class="gate" data-gate="CTRL">•</div>
+                                            <div class="gate" data-gate="M">📏</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn--primary" id="run-shors">Run Shor's Algorithm</button>
+                            </div>
+                        </div>
+
+                        <div class="factorization-result">
+                            <h3>Factorization Result</h3>
+                            <div class="result-display">
+                                <div class="result-item">
+                                    <label>Number to Factor (n):</label>
+                                    <span id="factor-n">2263</span>
+                                </div>
+                                <div class="result-item">
+                                    <label>Period Found (r):</label>
+                                    <span id="period-r">-</span>
+                                </div>
+                                <div class="result-item">
+                                    <label>Factors:</label>
+                                    <span id="found-factors">-</span>
+                                </div>
+                                <div class="result-item">
+                                    <label>RSA Compromised:</label>
+                                    <span id="rsa-compromised" class="status status--error">No</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- E91 QKD Protocol Tab -->
+                <div class="tab-content" id="e91-protocol">
+                    <div class="demo-section">
+                        <h2>E91 Quantum Key Distribution Protocol</h2>
+                        <div class="qkd-simulation">
+                            <div class="qkd-status">
+                                <div class="status-grid">
+                                    <div class="status-item">
+                                        <label>Entangled Pairs Generated:</label>
+                                        <span id="entangled-pairs">100</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <label>Matching Pairs:</label>
+                                        <span id="matching-pairs">19</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <label>QBER:</label>
+                                        <span id="qber-value" class="qber-normal">0.02</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <label>Threat Level:</label>
+                                        <span id="threat-level" class="status status--success">LOW</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="entanglement-visual">
+                                <h3>Entangled Photon Pairs</h3>
+                                <div class="entanglement-animation">
+                                    <div class="alice-station">
+                                        <h4>Alice</h4>
+                                        <div class="photon alice-photon" id="alice-photon">🔴</div>
+                                        <div class="measurement-basis">
+                                            <label>Basis:</label>
+                                            <span id="alice-basis">↕</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="entanglement-line">
+                                        <div class="entangled-line"></div>
+                                        <div class="entanglement-symbol">⟨Ψ⟩</div>
+                                    </div>
+                                    
+                                    <div class="bob-station">
+                                        <h4>Bob</h4>
+                                        <div class="photon bob-photon" id="bob-photon">🔵</div>
+                                        <div class="measurement-basis">
+                                            <label>Basis:</label>
+                                            <span id="bob-basis">↗</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn--primary" id="generate-entanglement">Generate Entangled Pairs</button>
+                            </div>
+
+                            <div class="key-generation">
+                                <h3>Quantum Key Generation</h3>
+                                <div class="key-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="key-progress" style="width: 0%"></div>
+                                    </div>
+                                    <div class="key-output">
+                                        <label>Generated Quantum Key:</label>
+                                        <span id="quantum-key" class="quantum-key-display">-</span>
+                                    </div>
+                                </div>
+                                <div class="qkd-controls">
+                                    <button class="btn btn--secondary" id="start-qkd">Start E91 Protocol</button>
+                                    <button class="btn btn--outline" id="simulate-attack">Simulate Eavesdropping</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Security Monitor Tab -->
+                <div class="tab-content" id="ai-security">
+                    <div class="demo-section">
+                        <h2>AI-Powered Security Monitoring</h2>
+                        <div class="monitoring-dashboard">
+                            <div class="dashboard-grid">
+                                <div class="monitor-card">
+                                    <h3>QBER Real-time Monitoring</h3>
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="qber-chart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="monitor-card">
+                                    <h3>AI Anomaly Detection</h3>
+                                    <div class="anomaly-display">
+                                        <div class="anomaly-score">
+                                            <label>Current Anomaly Score:</label>
+                                            <span id="anomaly-score">0.1</span>
+                                        </div>
+                                        <div class="threat-indicator">
+                                            <div class="threat-level-bar">
+                                                <div class="threat-fill" id="threat-fill"></div>
+                                            </div>
+                                            <div class="threat-labels">
+                                                <span>LOW</span>
+                                                <span>MEDIUM</span>
+                                                <span>HIGH</span>
+                                            </div>
+                                        </div>
+                                        <div class="ai-recommendation">
+                                            <label>AI Recommendation:</label>
+                                            <span id="ai-recommendation">Continue key exchange - Normal operation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="security-alerts">
+                                <h3>Security Alert System</h3>
+                                <div class="alerts-container" id="security-alerts">
+                                    <div class="alert alert-success">
+                                        <span class="alert-time">15:42:33</span>
+                                        <span class="alert-message">E91 protocol initiated successfully</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="monitoring-controls">
+                                <button class="btn btn--primary" id="start-monitoring">Start AI Monitoring</button>
+                                <button class="btn btn--outline" id="trigger-anomaly">Trigger Anomaly</button>
+                                <button class="btn btn--secondary" id="reset-monitoring">Reset Monitor</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secure Communication Tab -->
+                <div class="tab-content" id="secure-communication">
+                    <div class="demo-section">
+                        <h2>Quantum-Secured Communication</h2>
+                        <div class="communication-demo">
+                            <div class="security-status">
+                                <div class="status-indicators">
+                                    <div class="indicator">
+                                        <span class="indicator-label">Quantum Key Distribution:</span>
+                                        <span class="status status--success" id="qkd-status">ACTIVE</span>
+                                    </div>
+                                    <div class="indicator">
+                                        <span class="indicator-label">AES-256-GCM Encryption:</span>
+                                        <span class="status status--success" id="aes-status">ACTIVE</span>
+                                    </div>
+                                    <div class="indicator">
+                                        <span class="indicator-label">Post-Quantum Security:</span>
+                                        <span class="status status--success" id="pq-status">ENABLED</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="communication-interface">
+                                <div class="message-input">
+                                    <h3>Send Secure Message</h3>
+                                    <textarea id="message-input" class="form-control" placeholder="Enter your confidential message...">CONFIDENTIAL: Quantum-secure communication established</textarea>
+                                    <button class="btn btn--primary" id="encrypt-send">Encrypt & Send</button>
+                                </div>
+
+                                <div class="encryption-process">
+                                    <h3>Encryption Process</h3>
+                                    <div class="process-steps">
+                                        <div class="process-step">
+                                            <span class="step-number">1</span>
+                                            <span class="step-description">Generate AES key using quantum-distributed bits</span>
+                                            <span class="step-status" id="step1-status">⏳</span>
+                                        </div>
+                                        <div class="process-step">
+                                            <span class="step-number">2</span>
+                                            <span class="step-description">Encrypt message with AES-256-GCM</span>
+                                            <span class="step-status" id="step2-status">⏳</span>
+                                        </div>
+                                        <div class="process-step">
+                                            <span class="step-number">3</span>
+                                            <span class="step-description">Verify quantum key integrity</span>
+                                            <span class="step-status" id="step3-status">⏳</span>
+                                        </div>
+                                        <div class="process-step">
+                                            <span class="step-number">4</span>
+                                            <span class="step-description">Transmit encrypted data</span>
+                                            <span class="step-status" id="step4-status">⏳</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="encrypted-output">
+                                    <h3>Encrypted Message</h3>
+                                    <div class="encrypted-display">
+                                        <div class="crypto-item">
+                                            <label>Ciphertext:</label>
+                                            <span id="ciphertext" class="crypto-value">encrypted_a7f93b2e8c1d5f4a</span>
+                                        </div>
+                                        <div class="crypto-item">
+                                            <label>Nonce:</label>
+                                            <span id="nonce" class="crypto-value">nonce_7834</span>
+                                        </div>
+                                        <div class="crypto-item">
+                                            <label>Authentication Tag:</label>  
+                                            <span id="auth-tag" class="crypto-value">tag_94756</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="real-world-metrics">
+                                <h3>Real-World Implementation Metrics</h3>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <label>Key Generation Rate:</label>
+                                        <span>1-100 kbps</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <label>Maximum Distance:</label>
+                                        <span>400km with repeaters</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <label>Security Guarantee:</label>
+                                        <span>Information-theoretic</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <label>Commercial Availability:</label>
+                                        <span>Available now</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Attack Simulation Modal -->
+        <div class="modal hidden" id="attack-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Real-Life Communication Breach Simulation</h3>
+                    <button class="modal-close" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="simulation-scenario">
+                        <h4>Scenario: Financial Data Transmission</h4>
+                        <div class="scenario-status" id="scenario-status">
+                            <div class="status-message">Initiating secure communication...</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="simulation-progress"></div>
+                            </div>
+                        </div>
+                        <div class="scenario-controls">
+                            <button class="btn btn--primary" id="start-simulation">Start Full Demo</button>
+                            <button class="btn btn--outline" id="deploy-defense">Deploy E91 Defense</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Application Info -->
+        <footer class="app-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="tech-stack">
+                        <h4>Technology Stack</h4>
+                        <div class="stack-grid">
+                            <div class="stack-item">
+                                <strong>Frontend:</strong> HTML5, CSS3, JavaScript ES6+
+                            </div>
+                            <div class="stack-item">
+                                <strong>Backend Simulation:</strong> Quantum algorithm simulations, AI anomaly detection
+                            </div>
+                            <div class="stack-item">
+                                <strong>Cryptography:</strong> RSA, AES-256-GCM, E91 QKD Protocol
+                            </div>
+                            <div class="stack-item">
+                                <strong>Visualization:</strong> Chart.js, Custom quantum circuit animations
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-info">
+                        <p>This demonstration showcases the transition from vulnerable classical cryptography to quantum-secured communication systems.</p>
+                        <p><strong>Ready for hackathon presentation</strong> - Complete with real-world implementation metrics and practical security demonstrations.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
