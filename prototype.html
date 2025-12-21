@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Shield Solutions - Live Security Prototype</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --terminal-bg: #000000;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-blue);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .status-badge {
+            background-color: var(--accent-green);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .key-stream {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: var(--accent-green);
+            word-break: break-all;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .attack-btn {
+            background: linear-gradient(145deg, #331e1e, #2d1b1b);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .attack-btn:hover {
+            background: var(--accent-red);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-red);
+        }
+
+        .attack-btn small {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+
+        .terminal {
+            background-color: var(--terminal-bg);
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 8px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .qber-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #334155;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .qber-bar {
+            height: 100%;
+            width: 2%;
+            background-color: var(--accent-green);
+            transition: width 0.5s, background-color 0.5s;
+        }
+
+        /* Animations */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .alert-mode {
+            animation: pulse-red 2s infinite;
+            border-color: var(--accent-red);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">🛡️ Quantum Shield Solutions <span style="font-size: 0.8rem; color: #64748b;">| B2B Banking Gateway</span></div>
+        <div id="system-status" class="status-badge">SYSTEM SECURE</div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h2>Live Quantum Key (AES-256)</h2>
+            <div id="key-display" class="key-stream">Generating...</div>
+            <div style="margin-top: 10px; font-size: 0.8rem; color: #64748b;">
+                Entropy: <span id="entropy-val" style="color: var(--accent-green);">0.998</span> | Protocol: E91
+            </div>
+        </div>
+
+        <div class="card" id="qber-card">
+            <h2>QBER (Error Rate) Monitor</h2>
+            <div class="metric-value" id="qber-val">1.2%</div>
+            <div class="qber-bar-container">
+                <div id="qber-bar" class="qber-bar"></div>
+            </div>
+            <div style="margin-top: 5px; font-size: 0.8rem;">Threshold: 11% (Safe)</div>
+        </div>
+
+        <div class="card">
+            <h2>AI Anomaly Detector</h2>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div id="ai-indicator" style="width: 15px; height: 15px; background: var(--accent-green); border-radius: 50%;"></div>
+                <span id="ai-text" style="font-weight: bold;">Active & Monitoring</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div style="font-size: 0.8rem; color: #64748b;">Model: Isolation Forest + LSTM</div>
+                <div style="font-size: 0.8rem; color: #64748b;">Latency: 42ms</div>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 30px; border-bottom: 1px solid #334155; padding-bottom: 10px;">⚡ Attack Simulation Lab (Prototype Demo)</h3>
+    <div class="controls-grid">
+        <button class="attack-btn" onclick="simulateMITM()">
+            1. INJECT MAN-IN-THE-MIDDLE
+            <small>Intersects Photon Stream</small>
+        </button>
+        <button class="attack-btn" onclick="simulateHarvest()">
+            2. HARVEST NOW, DECRYPT LATER
+            <small>Steal Encrypted Data</small>
+        </button>
+        <button class="attack-btn" onclick="simulateReplay()">
+            3. ATTEMPT REPLAY ATTACK
+            <small>Resend Old Token</small>
+        </button>
+        <button class="attack-btn" onclick="simulateBruteForce()">
+            4. LAUNCH BRUTE FORCE
+            <small>Crack AES-256 Key</small>
+        </button>
+    </div>
+
+    <div class="terminal" id="terminal">
+        > [SYSTEM] Quantum Shield Core v2.1 Initialized...<br>
+        > [QKD] Connected to Satellite Node A...<br>
+        > [KEY_GEN] Stream active. 1.2 Mbps...<br>
+    </div>
+
+    <script>
+        // === CORE LOGIC ===
+        const terminal = document.getElementById('terminal');
+        const keyDisplay = document.getElementById('key-display');
+        const qberVal = document.getElementById('qber-val');
+        const qberBar = document.getElementById('qber-bar');
+        const statusBadge = document.getElementById('system-status');
+        const qberCard = document.getElementById('qber-card');
+
+        let isUnderAttack = false;
+
+        // Helper: Log to Terminal
+        function log(msg, type='info') {
+            const time = new Date().toLocaleTimeString();
+            let color = '#00ff00'; // Green
+            if (type === 'error') color = '#ef4444'; // Red
+            if (type === 'warn') color = '#f59e0b'; // Orange
+            if (type === 'blue') color = '#3b82f6'; // Blue
+
+            terminal.innerHTML += `<div style="color: ${color};">> [${time}] ${msg}</div>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Helper: Generate Random Hex Key
+        function generateKey() {
+            const chars = '0123456789ABCDEF';
+            let key = '';
+            for (let i = 0; i < 64; i++) {
+                key += chars[Math.floor(Math.random() * 16)];
+                if (i % 4 === 3 && i < 63) key += ' ';
+            }
+            return key;
+        }
+
+        // 1. Normal Operation Loop
+        setInterval(() => {
+            if (!isUnderAttack) {
+                // Update Key
+                keyDisplay.innerText = generateKey();
+                
+                // Fluctuuate QBER slightly (0.5% - 2.5%)
+                const normalQber = (Math.random() * 2 + 0.5).toFixed(1);
+                qberVal.innerText = normalQber + '%';
+                qberBar.style.width = normalQber + '%';
+                qberBar.style.backgroundColor = '#10b981'; // Green
+            }
+        }, 1000);
+
+        // === ATTACK SCENARIOS ===
+
+        // SCENARIO 1: MITM ATTACK
+        function simulateMITM() {
+            if(isUnderAttack) return;
+            isUnderAttack = true;
+
+            log("⚠️ ALERT: Eavesdropper detected on Quantum Channel!", 'error');
+            
+            // Visual Effects
+            statusBadge.innerText = "ATTACK DETECTED";
+            statusBadge.style.backgroundColor = "#ef4444";
+            qberCard.classList.add('alert-mode');
+
+            // 1. Spike QBER
+            let spike = 0;
+            const spikeInterval = setInterval(() => {
+                spike += 5;
+                if (spike > 25) spike = 25 + Math.random() * 5;
+                qberVal.innerText = spike.toFixed(1) + '%';
+                qberBar.style.width = spike + '%';
+                qberBar.style.backgroundColor = '#ef4444'; // Red
+            }, 100);
+
+            // 2. AI Reaction sequence
+            setTimeout(() => { log("🔍 AI MODEL (Isolation Forest): Anomaly confirmed. Pattern matches Eve.", 'warn'); }, 800);
+            setTimeout(() => { log("🚫 QKD Protocol: Discarding compromised keys.", 'error'); keyDisplay.style.color = 'red'; keyDisplay.innerText = "!! KEY COMPROMISED !!"; }, 1600);
+            setTimeout(() => { log("✂️ ACTION: Terminating connection to Node A...", 'blue'); }, 2500);
+            
+            // 3. Recovery
+            setTimeout(() => {
+                clearInterval(spikeInterval);
+                log("✅ SYSTEM: Rerouting to backup Secure Channel...", 'info');
+                log("🔄 RECOVERY: Generating fresh Quantum Keys.", 'info');
+                
+                // Reset UI
+                isUnderAttack = false;
+                statusBadge.innerText = "SYSTEM SECURE";
+                statusBadge.style.backgroundColor = "#10b981";
+                qberCard.classList.remove('alert-mode');
+                keyDisplay.style.color = '#10b981';
+            }, 4000);
+        }
+
+        // SCENARIO 2: HARVEST NOW, DECRYPT LATER
+        function simulateHarvest() {
+            log("💾 SIMULATION: Hacker stealing encrypted data packet...", 'warn');
+            setTimeout(() => {
+                log("🔒 ANALYSIS: Data is locked with AES-256 + Quantum Key.", 'info');
+                log("🧮 FORWARD SECRECY CHECK: Key is True Random (Quantum).", 'blue');
+                log("⏳ PREDICTION: Classical Supercomputer time to crack: 10^60 Years.", 'info');
+                log("🛡️ RESULT: Data remains secure indefinitely.", 'info');
+            }, 1000);
+        }
+
+        // SCENARIO 3: REPLAY ATTACK
+        function simulateReplay() {
+            log("🔄 SIMULATION: Receiving duplicated Token ID: #8X92...", 'warn');
+            setTimeout(() => {
+                log("⏱️ TIME-BIN CHECK: Token timestamp: 12:00:01 (Expected: 12:05:30)", 'error');
+                log("🚫 PROTOCOL: Timestamp Mismatch!", 'error');
+                log("🛡️ ACTION: Packet Rejected immediately.", 'info');
+            }, 1200);
+        }
+
+        // SCENARIO 4: BRUTE FORCE
+        function simulateBruteForce() {
+            log("🔨 ATTACK: Massive Brute Force attempt detected on API...", 'error');
+            let attempts = 0;
+            const bfInterval = setInterval(() => {
+                attempts += 1000000;
+                log(`⚠️ Firewall: Blocking IP block 192.168.x.x - ${attempts} attempts/sec`, 'warn');
+            }, 500);
+
+            setTimeout(() => {
+                clearInterval(bfInterval);
+                log("🛑 AI DEFENSE: Pattern recognized as Brute Force.", 'blue');
+                log("🔐 ENTROPY CHECK: Key Entropy is 0.99 (Max). No patterns found.", 'info');
+                log("🛡️ RESULT: Attack ineffective. IP Blacklisted.", 'info');
+            }, 2500);
+        }
+
+    </script>
+</body>
+</html>

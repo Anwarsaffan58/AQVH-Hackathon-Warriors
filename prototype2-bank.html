@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Bank of Quantum - Corporate Banking</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sbi-blue: #280071;
+            --sbi-light: #00b5ef;
+            --white: #ffffff;
+            --gray: #f3f4f6;
+            --quantum-green: #00ff9d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background-color: var(--gray);
+            color: #333;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--sbi-blue);
+            color: white;
+            padding: 10px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-area {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-circle {
+            width: 30px;
+            height: 30px;
+            background-color: var(--sbi-light);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .security-badge {
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid var(--quantum-green);
+            color: var(--quantum-green);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            height: 400px;
+        }
+
+        .menu-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .menu-item:hover {
+            background-color: #f8f9fa;
+            color: var(--sbi-blue);
+        }
+
+        .menu-item.active {
+            background-color: var(--sbi-blue);
+            color: white;
+            border-radius: 4px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+
+        .welcome-text {
+            font-size: 22px;
+            color: var(--sbi-blue);
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .account-card {
+            background: linear-gradient(135deg, var(--sbi-blue), #4a148c);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-card::after {
+            content: "QUANTUM SECURED";
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 10px;
+            border: 1px solid var(--quantum-green);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--quantum-green);
+        }
+
+        .balance {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* Transfer Section */
+        .transfer-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 96%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .btn-pay {
+            background-color: var(--sbi-light);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover {
+            background-color: #0099cc;
+        }
+
+        /* POPUP MODAL (The Magic Part) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #111;
+            color: var(--quantum-green);
+            padding: 30px;
+            border-radius: 12px;
+            width: 500px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid var(--quantum-green);
+            box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+            position: relative;
+        }
+
+        .log-line {
+            margin: 8px 0;
+            font-size: 14px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            margin-top: 20px;
+            border-radius: 2px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--quantum-green);
+            transition: width 3s linear;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo-area">
+            <div class="logo-circle"></div>
+            State Bank of Quantum
+        </div>
+        <div class="security-badge">
+            <i class="fas fa-shield-alt"></i> Protected by Quantum Shield Solutions
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item active"><i class="fas fa-home"></i> Dashboard</div>
+            <div class="menu-item"><i class="fas fa-exchange-alt"></i> Fund Transfer</div>
+            <div class="menu-item"><i class="fas fa-history"></i> Transaction History</div>
+            <div class="menu-item"><i class="fas fa-file-invoice"></i> e-Statements</div>
+            <div class="menu-item"><i class="fas fa-cog"></i> Security Settings</div>
+        </div>
+
+        <div class="dashboard">
+            <div class="welcome-text">Welcome, Hima Bindu Atti (Start-Up Account)</div>
+            
+            <div class="account-card">
+                <div>Available Balance</div>
+                <div class="balance">₹ 14,20,000.00</div>
+                <div>Acct No: xxxx-xxxx-9352</div>
+            </div>
+
+            <h3>Quick Transfer</h3>
+            <div class="transfer-box">
+                <div class="input-group">
+                    <label>Beneficiary Name</label>
+                    <input type="text" placeholder="e.g. Vendor Corp Ltd">
+                </div>
+                <div class="input-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" placeholder="Enter Amount">
+                </div>
+                <button class="btn-pay" onclick="startQuantumTransfer()">INITIATE SECURE TRANSFER</button>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 12px; color: #666;">
+                <i class="fas fa-lock"></i> All transactions are end-to-end encrypted using AES-256-GCM and secured by Quantum Key Distribution (E91 Protocol).
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="q-modal">
+        <div class="modal-content">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-top:0;">
+                <i class="fas fa-microchip"></i> QUANTUM SECURITY CORE
+            </h3>
+            <div id="logs"></div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="p-fill"></div>
+            </div>
+            
+            <div id="success-msg" style="text-align: center; margin-top: 20px; font-weight: bold; color: white; display: none;">
+                <i class="fas fa-check-circle" style="color: var(--quantum-green);"></i> TRANSFER SUCCESSFUL
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startQuantumTransfer() {
+            document.getElementById('q-modal').style.display = 'flex';
+            const logs = document.getElementById('logs');
+            const fill = document.getElementById('p-fill');
+            logs.innerHTML = ''; // clear logs
+            fill.style.width = '0%';
+
+            const steps = [
+                "Connecting to Quantum API Node...",
+                "Requesting Entangled Qubits (Bell State)...",
+                "Measuring Z-Basis... [1 0 0 1 1 0]",
+                "Generating AES-256 Key: 8f3a-92b1-44c2...",
+                "AI Anomaly Scan: NO EAVESDROPPER FOUND",
+                "Locking Transaction Packet...",
+                "Verifying Hash...",
+                "Sent to Core Banking System."
+            ];
+
+            let i = 0;
+            // Animate Logs
+            const interval = setInterval(() => {
+                if (i < steps.length) {
+                    logs.innerHTML += `<div class="log-line">> ${steps[i]}</div>`;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('success-msg').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('q-modal').style.display = 'none';
+                        alert("Transaction Complete! Secured by Quantum Shield.");
+                    }, 2000);
+                }
+            }, 500);
+
+            // Animate Bar
+            setTimeout(() => { fill.style.width = '100%'; }, 100);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Warriors - Professional Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: none;
+            flex-direction: column;
+            padding: 60px 80px;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Professional Title Slide */
+        .slide-1 {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            text-align: center;
+            justify-content: center;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .team-badge {
+            display: inline-block;
+            background: #34495e;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 10px;
+        }
+
+        .hackathon-info {
+            margin-top: 40px;
+            font-size: 18px;
+            color: #95a5a6;
+        }
+
+        /* Content Slides */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .slide-title {
+            font-size: 36px;
+            font-weight: 300;
+            color: #2c3e50;
+            letter-spacing: -0.5px;
+        }
+
+        .slide-number {
+            font-size: 14px;
+            color: #95a5a6;
+            font-weight: 500;
+        }
+
+        .content-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bullet-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bullet-points li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #34495e;
+        }
+
+        .bullet-points li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .highlight-box {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 20px 25px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box p {
+            font-size: 16px;
+            color: #2c3e50;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 300;
+            color: #3498db;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .team-member {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        .member-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            font-size: 14px;
+            color: #3498db;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .member-desc {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+
+        .slide-counter {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 90vh;
+                padding: 40px 30px;
+            }
+
+            .main-title {
+                font-size: 36px;
+            }
+
+            .slide-title {
+                font-size: 28px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1 active">
+            <div class="main-title">Quantum Shield</div>
+            <div class="subtitle">QRNG for Defense Communications</div>
+            
+            <div style="margin: 50px 0;">
+                <div class="team-badge">Hackathon Warriors</div>
+                <div class="team-badge">Team ID: 3C-31019</div>
+                <div class="team-badge">AQVH 2025</div>
+            </div>
+            
+            <div class="hackathon-info">
+                Amaravati Quantum Valley Hackathon 2025<br>
+                Problem Statement: AQVH1910 - Quantum Random Number Generator for Defense
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title">The Quantum Threat</h2>
+                <div class="slide-number">2/7</div>
+            </div>
+            
+            <div class="content-section">
+                <ul class="bullet-points">
+                    <li>90% of defense communications use RSA/ECC encryption vulnerable to quantum attacks</li>
+                    <li>17% of security failures come from predictable random numbers</li>
+                    <li>Shor's algorithm can break RSA-2048 by 2030</li>
+                    <li>Organizations face $1 trillion in breach liabilities</li>
+                    <li>Current defense systems lack quantum-safe protection</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Who is affected:</strong> Satellite telemetry, naval channels, UAV/aircraft communications, drone/sensor ground control</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Solution -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title">Our Solution: Quantum Shield</h2>
+                <div class="slide-number">3/7</div>
+            </div>
+            
+            <div class="content-section">
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: #3498db; margin-bottom: 20px;">Technology Stack</h3>
+                        <ul class="bullet-points">
+                            <li>QRNG generates true quantum randomness</li>
+                            <li>E91 QKD detects eavesdropping attempts</li>
+                            <li>AES-256-GCM with dynamic key refresh</li>
+                            <li>Real-time entropy and QBER monitoring</li>
+                            <li>AI-powered anomaly detection</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: #3498db; margin-bottom: 20px;">Key Benefits</h3>
+                        <ul class="bullet-points">
+                            <li>Quantum-safe defense communications</li>
+                            <li>Uninterrupted secure channels</li>
+                            <li>Scales across all defense platforms</li>
+                            <li>70% energy savings vs classical methods</li>
+                            <li>Future-proof against quantum threats</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <p><strong>Impact:</strong> Transforms vulnerable defense communications into unbreakable quantum-secured networks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Technical Innovation -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title">Technical Innovation</h2>
+                <div class="slide-number">4/7</div>
+            </div>
+            
+            <div class="content-section">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-value">0.99</span>
+                        <div class="metric-label">Quantum Entropy</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">92%</span>
+                        <div class="metric-label">AI Accuracy</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value"><100ms</span>
+                        <div class="metric-label">Response Time</div>
+                    </div>
+                </div>
+                
+                <ul class="bullet-points">
+                    <li>IBM Qiskit-based quantum circuits with Hadamard gate superposition</li>
+                    <li>E91 protocol with Bell inequality tests for quantum security validation</li>
+                    <li>Machine learning models (Isolation Forest, LSTM) for anomaly detection</li>
+                    <li>Dynamic AES key refresh every 30 bits using quantum randomness</li>
+                    <li>Modular architecture for seamless hardware migration</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Hardware Ready:</strong> Compatible with IBM Quantum Cloud, local QRNG devices, and embedded defense systems</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Team Excellence -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title">Hackathon Warriors Team</h2>
+                <div class="slide-number">5/7</div>
+            </div>
+            
+            <div class="content-section">
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-name">Saffan</div>
+                        <div class="member-role">Quantum Lead</div>
+                        <div class="member-desc">QRNG/QKD design, IBM Qiskit implementation, CHSH >2.4 achieved</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-name">Bhavya</div>
+                        <div class="member-role">AI Anomaly Detector</div>
+                        <div class="member-desc">ML models with 92% accuracy, real-time security monitoring</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-name">Pallavi</div>
+                        <div class="member-role">Backend Expert</div>
+                        <div class="member-desc">Flask APIs, AES-256-GCM integration, secure key management</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-name">Mohan</div>
+                        <div class="member-role">Frontend Designer</div>
+                        <div class="member-desc">Interactive dashboards, 60 FPS animations, 5+ visualization types</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-name">Prasanth</div>
+                        <div class="member-role">Sustainability Specialist</div>
+                        <div class="member-desc">40% performance optimization, 1 Mbps key rate design</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-name">Vinesh</div>
+                        <div class="member-role">Documentation Lead</div>
+                        <div class="member-desc">Technical writing, patent filing, 200+ pages documentation</div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <p><strong>11-week development:</strong> August 11 - October 28, 2025 | 2,030+ lines of code | Provisional patent filed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Results & Impact -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title">Results & National Impact</h2>
+                <div class="slide-number">6/7</div>
+            </div>
+            
+            <div class="content-section">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-value">70%</span>
+                        <div class="metric-label">Energy Savings</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">₹25-50Cr</span>
+                        <div class="metric-label">Cost Avoidance</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">4,380kg</span>
+                        <div class="metric-label">CO₂ Saved/Year</div>
+                    </div>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: #3498db; margin-bottom: 15px;">Economic Impact</h3>
+                        <ul class="bullet-points">
+                            <li>25-50 crores annual cost avoidance</li>
+                            <li>40-60% reduced infrastructure investment</li>
+                            <li>Scalable cloud deployment model</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: #3498db; margin-bottom: 15px;">Environmental Impact</h3>
+                        <ul class="bullet-points">
+                            <li>Supports green digital defense initiatives</li>
+                            <li>0.115 kWh & 0.0576 kg CO₂ per quantum bit</li>
+                            <li>Aligns with Net Zero emissions goals</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <p><strong>National Security:</strong> Protects against ₹1 trillion breach liabilities, ensures defense communications sovereignty</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Call to Action -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title">Next Steps & Collaboration</h2>
+                <div class="slide-number">7/7</div>
+            </div>
+            
+            <div class="content-section">
+                <h3 style="color: #3498db; margin-bottom: 25px; text-align: center;">Ready for Implementation</h3>
+                
+                <div class="two-column">
+                    <div>
+                        <h4 style="margin-bottom: 15px;">Immediate Actions</h4>
+                        <ul class="bullet-points">
+                            <li>DRDO pilot program integration</li>
+                            <li>ISRO satellite communication trials</li>
+                            <li>Hardware migration to quantum devices</li>
+                            <li>Defense partner validation</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="margin-bottom: 15px;">Support Needed</h4>
+                        <ul class="bullet-points">
+                            <li>Defense agency partnerships (DRDO)</li>
+                            <li>Quantum hardware access (IBM, Google)</li>
+                            <li>Government innovation grants</li>
+                            <li>Academic validation networks</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box" style="text-align: center; margin-top: 30px;">
+                    <p style="font-size: 18px; margin-bottom: 10px;"><strong>Together, let's secure India's quantum future</strong></p>
+                    <p>Technology ready | Patent filed | National impact | Global potential</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <div class="team-badge" style="display: inline-block;">hackathonwarriors150@gmail.com</div>
+                    <div class="team-badge" style="display: inline-block;">github.com/Anwarsaffan58/AQVH-Hackathon-Warriors</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="changeSlide(-1)">← Previous</button>
+        <div class="slide-counter"><span id="currentSlide">1</span> / 7</div>
+        <button class="nav-btn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.querySelector(`.slide:nth-child(${currentSlide})`).classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide;
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html>

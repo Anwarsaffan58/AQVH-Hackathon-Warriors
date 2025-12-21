@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Bank of Quantum | Saffan's Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sbi-blue: #280071;
+            --sbi-light: #00b5ef;
+            --white: #ffffff;
+            --gray: #f3f4f6;
+            --quantum-green: #00ff9d;
+            --alert-red: #dc2626;
+            --card-gold: linear-gradient(135deg, #c5a017, #e8c74e);
+            --card-black: linear-gradient(135deg, #1f1f1f, #333);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background-color: var(--gray);
+            color: #333;
+        }
+
+        /* --- HEADER --- */
+        .top-bar {
+            background-color: var(--sbi-blue);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-area { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .logo-circle { 
+            width: 30px; height: 30px; 
+            background: radial-gradient(circle, var(--sbi-light) 30%, transparent 70%);
+            border: 2px solid var(--sbi-light);
+            border-radius: 50%; 
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1400px; margin: 20px auto;
+            display: grid; 
+            /* Default Desktop Layout: Sidebar | Main | Security */
+            grid-template-columns: 260px 1fr 320px;
+            gap: 25px; padding: 0 20px;
+        }
+
+        /* --- MOBILE MAGIC (THE FIX) --- */
+        @media only screen and (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr; /* Stack everything */
+                padding: 10px;
+            }
+            .sidebar { display: none; } /* Hide Sidebar on Mobile */
+            .security-console { display: none; } /* HIDE HACKER TERMINAL ON MOBILE */
+            .top-bar { padding: 10px 15px; }
+            .logo-area { font-size: 18px; }
+            .user-profile-header { display: none; } /* Simplify header */
+            .welcome-card { flex-direction: column; text-align: center; gap: 10px; }
+            .cards-container { padding-bottom: 20px; }
+            .bank-card { min-width: 280px; height: 170px; }
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar { background: white; border-radius: 12px; padding: 20px 0; height: fit-content; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .menu-item { padding: 15px 25px; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; font-weight: 500; }
+        .menu-item.active { background-color: #eff6ff; color: var(--sbi-blue); border-right: 4px solid var(--sbi-blue); }
+        
+        .branch-info {
+            margin: 20px 20px 0 20px; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;
+        }
+
+        /* --- DASHBOARD --- */
+        .main-content { display: flex; flex-direction: column; gap: 20px; }
+
+        .welcome-card { 
+            background: white; padding: 20px; border-radius: 12px; 
+            border-bottom: 4px solid var(--sbi-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* CARDS */
+        .cards-container { display: flex; gap: 15px; overflow-x: auto; scroll-behavior: smooth; }
+        .cards-container::-webkit-scrollbar { display: none; }
+        
+        .bank-card {
+            min-width: 300px; height: 180px; border-radius: 15px; padding: 20px; color: white;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .card-gold { background: var(--card-gold); }
+        .card-black { background: var(--card-black); }
+        .card-number { font-family: 'Courier New', monospace; font-size: 1.3rem; letter-spacing: 2px; }
+
+        /* TRANSFER */
+        .transfer-widget { background: white; padding: 20px; border-radius: 12px; }
+        .toggle-switch { display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; margin: 15px 0; }
+        .toggle-opt { flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
+        .toggle-opt.selected.cl { background: white; color: #ef4444; border: 1px solid #fee2e2; }
+        .toggle-opt.selected.qu { background: var(--quantum-green); color: #065f46; box-shadow: 0 2px 4px rgba(0,255,157,0.3); }
+
+        .btn-transfer { width: 100%; padding: 14px; background: var(--sbi-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+
+        /* --- SECURITY PANEL (Desktop Only) --- */
+        .security-console { 
+            background: #0f172a; color: #00ff9d; border-radius: 12px; padding: 20px; 
+            font-family: 'Courier New', monospace; display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid #1e293b;
+        }
+        .terminal-window {
+            height: 350px; overflow-y: auto; background: #020617; padding: 10px; border-radius: 6px; 
+            font-size: 0.8rem; line-height: 1.5; color: #cbd5e1; border: 1px solid #1e293b;
+        }
+
+        /* OVERLAYS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95); display: none; z-index: 2000;
+            justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-box {
+            background: white; padding: 30px; border-radius: 15px; text-align: center; width: 100%; max-width: 350px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo-area">
+            <div class="logo-circle"></div>
+            State Bank of Quantum
+        </div>
+        <div class="user-profile-header">
+            <span style="font-size:0.9rem; margin-right:10px;">Saffan</span>
+            <i class="fas fa-user-circle" style="font-size:1.5rem;"></i>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="sidebar">
+            <div class="menu-item active"><i class="fas fa-th-large"></i> Dashboard</div>
+            <div class="menu-item"><i class="fas fa-credit-card"></i> My Cards</div>
+            <div class="menu-item"><i class="fas fa-exchange-alt"></i> Transfers</div>
+            <div class="branch-info">
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:bold;">BRANCH</div>
+                <div style="font-size:0.85rem; font-weight:600; margin-top:5px;">Atal Incubation Center<br>SKU Anantapur</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="welcome-card">
+                <div>
+                    <h2 style="margin:0; font-size:1.2rem; color:var(--sbi-blue);">Hello, Saffan</h2>
+                    <p style="margin:5px 0 0 0; font-size:0.85rem; color:#666;">Student Account • ID: 9352</p>
+                </div>
+            </div>
+
+            <div class="cards-container">
+                <div class="bank-card card-black">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div style="width:40px; height:30px; background:#ccc; border-radius:4px;"></div>
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="card-number">4592 •••• •••• 8821</div>
+                    <div style="font-size:0.8rem; opacity:0.8;">SAFFAN</div>
+                </div>
+                <div class="bank-card card-gold">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div style="width:40px; height:30px; background:#ccc; border-radius:4px;"></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">DEBIT</span>
+                    </div>
+                    <div class="card-number">5100 •••• •••• 1029</div>
+                    <div style="font-size:0.8rem; opacity:0.8;">VALID 12/29</div>
+                </div>
+            </div>
+
+            <div class="transfer-widget">
+                <h3 style="margin:0 0 15px 0; font-size:1.1rem; color:var(--sbi-blue);">Transfer Money</h3>
+                
+                <div class="toggle-switch">
+                    <div id="opt-cl" class="toggle-opt selected cl" onclick="switchMode('classical')">Classical (TLS)</div>
+                    <div id="opt-qu" class="toggle-opt" onclick="switchMode('quantum')">Quantum (E91)</div>
+                </div>
+
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:5px;">Beneficiary</label>
+                    <input type="text" value="Grant Fund" readonly style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:5px;">Amount</label>
+                    <input type="text" value="₹ 50,000" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-weight:bold; box-sizing:border-box;">
+                </div>
+
+                <button class="btn-transfer" onclick="startTx()">SEND NOW</button>
+            </div>
+        </div>
+
+        <div class="security-console">
+            <div style="border-bottom:1px solid #333; padding-bottom:10px;">
+                <span><i class="fas fa-terminal"></i> QUANTUM CORE</span>
+            </div>
+
+            <div class="terminal-window" id="terminal">
+                > [SYSTEM] Node Initialized.<br>
+                > [INFO] Saffan logged in.<br>
+                > [WAIT] Ready for transaction...
+            </div>
+
+            <button onclick="triggerHack()" style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#ef4444; padding:10px; width:100%; border-radius:6px; font-weight:bold; cursor:pointer;">
+                <i class="fas fa-bug"></i> SIMULATE ATTACK
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-success" class="modal-overlay">
+        <div class="modal-box">
+            <i class="fas fa-check-circle" style="font-size:3rem; color:var(--quantum-green); margin-bottom:15px;"></i>
+            <h3>Transfer Successful</h3>
+            <p style="color:#666; font-size:0.9rem;">Secured by Quantum Shield.</p>
+            <button onclick="closeModal('modal-success')" style="margin-top:20px; padding:10px 25px; background:var(--sbi-blue); color:white; border:none; border-radius:5px;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let mode = 'classical';
+        const term = document.getElementById('terminal');
+
+        function log(msg, color='#cbd5e1') {
+            const time = new Date().toLocaleTimeString('en-US', {hour12:false});
+            term.innerHTML += `<div style="color:${color}"><span style="opacity:0.5">[${time}]</span> ${msg}</div>`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function switchMode(m) {
+            mode = m;
+            document.getElementById('opt-cl').classList.remove('selected');
+            document.getElementById('opt-qu').classList.remove('selected');
+            if(mode === 'classical') {
+                document.getElementById('opt-cl').classList.add('selected');
+                log("Mode: CLASSICAL (Unsafe)", '#ef4444');
+            } else {
+                document.getElementById('opt-qu').classList.add('selected');
+                log("Mode: QUANTUM (Active)", '#00ff9d');
+            }
+        }
+
+        function triggerHack() {
+            log("⚠️ MITM ATTACK DETECTED!", '#ef4444');
+        }
+
+        function startTx() {
+            if(mode === 'classical') {
+                log("Standard Tx Initiated...", '#fff');
+                setTimeout(() => document.getElementById('modal-success').style.display = 'flex', 1500);
+            } else {
+                log("Generating Quantum Keys...", '#3b82f6');
+                log("Verifying Bell States...", '#00ff9d');
+                setTimeout(() => document.getElementById('modal-success').style.display = 'flex', 1500);
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
+</body>
+</html>

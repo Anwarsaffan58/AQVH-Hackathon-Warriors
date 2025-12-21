@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRDO Quantum Command | Tactical Link</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050b14;
+            --panel-bg: #0f172a;
+            --neon-green: #00ff41; /* Hacker Green */
+            --alert-red: #ff0033;
+            --text-color: #e2e8f0;
+            --border-color: #1e293b;
+        }
+        
+        body { margin: 0; font-family: 'Courier New', monospace; background: var(--bg-color); color: var(--text-color); }
+
+        /* HEADER */
+        .top-bar {
+            background: #020617; border-bottom: 2px solid var(--neon-green); padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo-area { font-size: 1.5rem; font-weight: bold; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
+        .status-badge { background: #14532d; color: #4ade80; padding: 5px 15px; border: 1px solid #4ade80; font-size: 0.8rem; }
+
+        /* LAYOUT */
+        .container { max-width: 1400px; margin: 30px auto; display: grid; grid-template-columns: 300px 1fr 350px; gap: 20px; padding: 0 20px; }
+
+        /* PANELS */
+        .panel { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 4px; }
+        
+        /* SIDEBAR INFO */
+        .info-row { margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .label { color: #64748b; font-size: 0.8rem; display: block; margin-bottom: 5px; }
+        .value { color: var(--neon-green); font-weight: bold; }
+
+        /* MAIN MISSION SCREEN */
+        .mission-screen { border: 1px solid var(--neon-green); background: #000; height: 200px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-bottom: 20px; }
+        .grid-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px); background-size: 20px 20px; }
+        .target-reticle { border: 2px solid var(--neon-green); width: 50px; height: 50px; border-radius: 50%; position: relative; animation: pulse 2s infinite; }
+        
+        /* CONTROLS */
+        .control-group { margin-bottom: 20px; }
+        .switch-container { display: flex; gap: 10px; margin-top: 10px; }
+        .tac-btn { flex: 1; background: #1e293b; border: 1px solid #475569; color: #94a3b8; padding: 15px; cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.2s; }
+        .tac-btn.active { background: var(--neon-green); color: black; border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+        .tac-btn.danger.active { background: var(--alert-red); color: white; border-color: var(--alert-red); box-shadow: 0 0 15px var(--alert-red); }
+
+        .big-button { width: 100%; padding: 20px; font-size: 1.2rem; background: transparent; border: 2px solid var(--neon-green); color: var(--neon-green); cursor: pointer; text-transform: uppercase; font-weight: bold; letter-spacing: 2px; transition: 0.3s; }
+        .big-button:hover { background: var(--neon-green); color: black; }
+
+        /* CONSOLE */
+        .console { background: #000; color: var(--neon-green); font-family: 'Courier New', monospace; height: 400px; overflow-y: auto; padding: 15px; border: 1px solid #333; font-size: 0.85rem; line-height: 1.5; }
+        .log-time { color: #64748b; margin-right: 10px; }
+
+        /* ANIMATIONS */
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+        
+        /* MODALS */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 100; }
+        .modal-content { border: 2px solid var(--neon-green); background: #000; padding: 40px; text-align: center; max-width: 500px; color: var(--neon-green); box-shadow: 0 0 30px var(--neon-green); }
+        .modal-content.danger { border-color: var(--alert-red); color: var(--alert-red); box-shadow: 0 0 30px var(--alert-red); }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo-area"><i class="fas fa-satellite-dish"></i> DRDO // SECURE LINK</div>
+        <div class="status-badge">CONN: ACTIVE | LAT: 42ms</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="panel">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0;">MISSION PARAMETERS</h3>
+            
+            <div class="info-row">
+                <span class="label">OPERATIVE ID</span>
+                <span class="value">CPT. SAFFAN (31019)</span>
+            </div>
+            <div class="info-row">
+                <span class="label">UNIT</span>
+                <span class="value">SPECIAL FORCES // ALPHA</span>
+            </div>
+            <div class="info-row">
+                <span class="label">CURRENT LOCATION</span>
+                <span class="value">34.05° N, 77.12° E</span>
+            </div>
+            <div class="info-row">
+                <span class="label">SECURITY CLEARANCE</span>
+                <span class="value" style="color: #facc15;">LEVEL 5 (TOP SECRET)</span>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <span class="label">ATTACK SIMULATION</span>
+                <div class="switch-container">
+                    <button id="btn-safe" class="tac-btn active" onclick="toggleAttack(false)">SECURE</button>
+                    <button id="btn-hack" class="tac-btn danger" onclick="toggleAttack(true)">JAMMING</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3 style="margin-top: 0;">TACTICAL UPLINK</h3>
+            
+            <div class="mission-screen">
+                <div class="grid-overlay"></div>
+                <div class="target-reticle"></div>
+                <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.7rem; color: var(--neon-green);">SAT_LOCK: 98%</div>
+            </div>
+
+            <div class="control-group">
+                <span class="label">ENCRYPTION PROTOCOL</span>
+                <div class="switch-container">
+                    <button id="mode-rf" class="tac-btn" onclick="setMode('classical')">RADIO (RF)</button>
+                    <button id="mode-qkd" class="tac-btn active" onclick="setMode('quantum')">QUANTUM (E91)</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="label">PAYLOAD DATA</span>
+                <input type="text" value="COORDS: 34.112, 77.441 [PRIORITY: HIGH]" readonly 
+                       style="width: 100%; background: #000; border: 1px solid #333; color: white; padding: 15px; font-family: monospace; box-sizing: border-box;">
+            </div>
+
+            <button class="big-button" onclick="transmit()">INITIATE UPLINK</button>
+        </div>
+
+        <div class="panel" style="padding: 0; border: none;">
+            <div class="console" id="terminal">
+                > [SYSTEM] DRDO NODE INITIALIZED...<br>
+                > [HARDWARE] QRNG MODULE ONLINE.<br>
+                > [LINK] WAITING FOR TRANSMISSION...
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal-success" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle" style="font-size: 4rem; margin-bottom: 20px;"></i>
+            <h2>INTEL TRANSMITTED</h2>
+            <p>PACKET SECURED VIA QUANTUM ENTANGLEMENT.</p>
+            <button class="tac-btn active" onclick="closeModal('modal-success')">ACKNOWLEDGE</button>
+        </div>
+    </div>
+
+    <div id="modal-fail" class="modal">
+        <div class="modal-content danger">
+            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; margin-bottom: 20px;"></i>
+            <h2>SIGNAL INTERCEPTED</h2>
+            <p>RADIO ENCRYPTION BROKEN. ENEMY HAS COORDINATES.</p>
+            <button class="tac-btn danger" onclick="closeModal('modal-fail')">RESET LINK</button>
+        </div>
+    </div>
+
+    <div id="modal-saved" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-shield-alt" style="font-size: 4rem; margin-bottom: 20px;"></i>
+            <h2>HOSTILE DETECTED</h2>
+            <p>QUANTUM STATE COLLAPSE CONFIRMED.<br>TRANSMISSION ABORTED. INTEL SAFE.</p>
+            <button class="tac-btn active" onclick="closeModal('modal-saved')">RESET LINK</button>
+        </div>
+    </div>
+
+    <script>
+        let mode = 'quantum';
+        let attack = false;
+        const term = document.getElementById('terminal');
+
+        function log(msg, color='#00ff41') {
+            const time = new Date().toLocaleTimeString('en-GB');
+            term.innerHTML += `<div><span class="log-time">[${time}]</span> <span style="color:${color}">${msg}</span></div>`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('mode-rf').classList.remove('active');
+            document.getElementById('mode-qkd').classList.remove('active');
+            if(m === 'classical') {
+                document.getElementById('mode-rf').classList.add('active');
+                log("SWITCHED TO: STANDARD RADIO (UNSECURE)", '#fbbf24');
+            } else {
+                document.getElementById('mode-qkd').classList.add('active');
+                log("SWITCHED TO: QUANTUM LINK (E91)", '#00ff41');
+            }
+        }
+
+        function toggleAttack(state) {
+            attack = state;
+            document.getElementById('btn-safe').classList.remove('active');
+            document.getElementById('btn-hack').classList.remove('active');
+            
+            if(attack) {
+                document.getElementById('btn-hack').classList.add('active');
+                log("⚠️ WARNING: ENEMY JAMMING SIGNAL DETECTED", '#ff0033');
+            } else {
+                document.getElementById('btn-safe').classList.add('active');
+                log("AREA SECURE. NO HOSTILES.", '#00ff41');
+            }
+        }
+
+        async function transmit() {
+            log(`INITIATING ${mode.toUpperCase()} UPLINK...`, '#fff');
+            
+            try {
+                const res = await fetch('http://127.0.0.1:5000/transmit_intel', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ mode: mode, attack: attack })
+                });
+                const data = await res.json();
+
+                if(data.status === 'hacked') {
+                    log("❌ " + data.message, '#ff0033');
+                    setTimeout(() => document.getElementById('modal-fail').style.display = 'flex', 1500);
+                } else if(data.status === 'defended') {
+                    log("🛡️ " + data.message, '#00ff41');
+                    setTimeout(() => document.getElementById('modal-saved').style.display = 'flex', 1500);
+                } else {
+                    log("✅ " + data.message, '#fff');
+                    setTimeout(() => document.getElementById('modal-success').style.display = 'flex', 1000);
+                }
+
+            } catch(e) {
+                log("❌ UPLINK FAILED: SERVER OFFLINE", '#ff0033');
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
+</body>
+</html>

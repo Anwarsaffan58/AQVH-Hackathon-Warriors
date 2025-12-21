@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Bank of Quantum | Saffan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sbi-blue: #280071;
+            --sbi-dark: #1a004d;
+            --quantum-green: #00ff9d;
+            --alert-red: #ef4444;
+            --bg-gray: #f8f9fa;
+            --card-gold: linear-gradient(135deg, #FFD700, #B8860B);
+            --card-black: linear-gradient(135deg, #1F1F1F, #000000);
+        }
+        
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg-gray); color: #333; }
+
+        /* HEADER */
+        .top-bar {
+            background: linear-gradient(90deg, var(--sbi-blue), var(--sbi-dark));
+            color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100;
+        }
+        .logo-area { font-size: 1.4rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 35px; height: 35px; background: white; border-radius: 50%; border: 3px solid #00b5ef; }
+        .user-badge { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+
+        /* LAYOUT */
+        .container { max-width: 1400px; margin: 30px auto; display: grid; grid-template-columns: 260px 1fr 350px; gap: 25px; padding: 0 20px; }
+        
+        /* SIDEBAR */
+        .sidebar { background: white; border-radius: 12px; padding: 20px 0; height: fit-content; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .menu-item { padding: 15px 25px; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 15px; font-weight: 500; transition: 0.2s; }
+        .menu-item:hover { background: #eff6ff; color: var(--sbi-blue); padding-left: 30px; }
+        .menu-item.active { background: #eff6ff; color: var(--sbi-blue); border-right: 4px solid var(--sbi-blue); }
+        
+        .branch-card { margin: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.85rem; }
+
+        /* MAIN DASHBOARD */
+        .main-content { display: flex; flex-direction: column; gap: 25px; }
+        
+        /* Welcome Section */
+        .welcome-box { background: white; padding: 25px; border-radius: 12px; border-left: 5px solid var(--sbi-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Wallet Cards */
+        .cards-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .bank-card {
+            min-width: 300px; height: 180px; border-radius: 16px; padding: 25px; color: white;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); transition: transform 0.3s;
+        }
+        .bank-card:hover { transform: translateY(-5px); }
+        .card-gold { background: var(--card-gold); }
+        .card-black { background: var(--card-black); }
+        .card-num { font-family: 'Courier New', monospace; font-size: 1.4rem; letter-spacing: 2px; text-shadow: 0 2px 2px rgba(0,0,0,0.3); }
+
+        /* Transfer Widget */
+        .transfer-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .toggle-container { display: flex; background: #f8fafc; padding: 5px; border-radius: 8px; margin: 20px 0; border: 1px solid #e2e8f0; }
+        .toggle-btn { flex: 1; text-align: center; padding: 12px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .toggle-btn.cl.active { background: white; color: var(--alert-red); border: 1px solid #fca5a5; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .toggle-btn.qu.active { background: var(--quantum-green); color: #064e3b; box-shadow: 0 2px 5px rgba(0,255,157,0.4); }
+
+        .btn-send { width: 100%; padding: 15px; background: var(--sbi-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 15px; transition: 0.2s; }
+        .btn-send:hover { background: var(--sbi-dark); }
+
+        /* Recent Activity Table */
+        .activity-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .txn-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .txn-table th { text-align: left; color: #64748b; font-size: 0.8rem; padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; }
+        .txn-table td { padding: 15px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        .amt-pos { color: var(--quantum-green); font-weight: bold; }
+        .amt-neg { color: var(--alert-red); font-weight: bold; }
+
+        /* SECURITY CONSOLE (Right Side) */
+        .security-console { 
+            background: #0f172a; color: #00ff9d; border-radius: 12px; padding: 20px; 
+            font-family: 'Courier New', monospace; display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid #1e293b; height: fit-content;
+        }
+        .console-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .terminal { height: 350px; overflow-y: auto; background: #020617; padding: 15px; border-radius: 8px; font-size: 0.8rem; line-height: 1.6; color: #cbd5e1; border: 1px solid #1e293b; }
+        .led { width: 12px; height: 12px; background: #333; border-radius: 50%; }
+        .led.on { background: #00ff9d; box-shadow: 0 0 10px #00ff9d; }
+        .led.alert { background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: blink 0.5s infinite; }
+
+        /* ATTACK BUTTON */
+        .btn-hack {
+            width: 100%; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; 
+            color: #ef4444; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: sans-serif; transition: 0.2s;
+        }
+        .btn-hack:hover { background: #ef4444; color: white; }
+        .btn-hack.active { background: #ef4444; color: white; }
+
+        /* POPUPS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: none; z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: white; padding: 40px; border-radius: 15px; text-align: center; max-width: 400px; animation: popIn 0.3s; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes blink { 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo-area">
+            <div class="logo-icon"></div>
+            State Bank of Quantum
+        </div>
+        <div class="user-badge">
+            <span>Saffan</span> <i class="fas fa-user-circle"></i>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="sidebar">
+            <div class="menu-item active"><i class="fas fa-th-large"></i> Dashboard</div>
+            <div class="menu-item"><i class="fas fa-wallet"></i> My Cards</div>
+            <div class="menu-item"><i class="fas fa-exchange-alt"></i> Transfers</div>
+            <div class="menu-item"><i class="fas fa-file-invoice"></i> Statements</div>
+            <div class="menu-item"><i class="fas fa-cog"></i> Settings</div>
+
+            <div class="branch-card">
+                <div style="color:#94a3b8; font-weight:bold; font-size:0.7rem;">HOME BRANCH</div>
+                <div style="margin-top:5px; font-weight:600;">Atal Incubation Center<br>SKU Anantapur<br>AP, India</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="welcome-box">
+                <div>
+                    <h2 style="margin:0; font-size:1.5rem; color:var(--sbi-blue);">Hello, Saffan!</h2>
+                    <p style="margin:5px 0 0 0; color:#64748b; font-size:0.9rem;">Student Entrepreneur • ID: 9352</p>
+                </div>
+                <div style="background:#e0f2fe; color:#0369a1; padding:5px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold;">KYC VERIFIED</div>
+            </div>
+
+            <h3 style="margin:0; color:#475569;">My Wallet</h3>
+            <div class="cards-scroll">
+                <div class="bank-card card-black">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div style="width:45px; height:35px; background:linear-gradient(135deg, #e2e8f0, #94a3b8); border-radius:6px;"></div>
+                        <i class="fas fa-wifi" style="font-size:1.5rem; transform:rotate(90deg);"></i>
+                    </div>
+                    <div class="card-num">4592 •••• •••• 8821</div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                        <div>
+                            <div style="font-size:0.7rem; opacity:0.8;">CARD HOLDER</div>
+                            <div style="font-size:1rem; font-weight:bold;">SAFFAN</div>
+                        </div>
+                        <div style="font-size:1.5rem; font-weight:bold; font-style:italic;">VISA</div>
+                    </div>
+                </div>
+
+                <div class="bank-card card-gold">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div style="width:45px; height:35px; background:linear-gradient(135deg, #e2e8f0, #94a3b8); border-radius:6px;"></div>
+                        <span style="font-weight:bold; font-size:0.9rem;">PLATINUM</span>
+                    </div>
+                    <div class="card-num">5100 •••• •••• 1029</div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                        <div>
+                            <div style="font-size:0.7rem; opacity:0.8;">VALID THRU</div>
+                            <div style="font-size:1rem; font-weight:bold;">12/29</div>
+                        </div>
+                        <div style="font-size:1.5rem; font-weight:bold; font-style:italic;">MasterCard</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transfer-box">
+                <h3 style="margin:0; color:var(--sbi-blue);">Quick Transfer</h3>
+                
+                <div class="toggle-container">
+                    <div id="btn-cl" class="toggle-btn cl active" onclick="setMode('classical')">Classical (TLS)</div>
+                    <div id="btn-qu" class="toggle-btn qu" onclick="setMode('quantum')">Quantum (E91)</div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:15px;">
+                    <div>
+                        <label style="font-size:0.85rem; color:#64748b; font-weight:600;">Beneficiary</label>
+                        <input type="text" value="Defense Vendor Corp" readonly style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box; margin-top:5px;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:#64748b; font-weight:600;">Amount</label>
+                        <input type="text" value="₹ 50,000" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; font-weight:bold; box-sizing:border-box; margin-top:5px;">
+                    </div>
+                </div>
+
+                <button class="btn-send" onclick="startTx()">SEND MONEY</button>
+            </div>
+
+            <div class="activity-box">
+                <h4 style="margin:0 0 10px 0;">Recent Transactions</h4>
+                <table class="txn-table">
+                    <thead><tr><th>DATE</th><th>DESCRIPTION</th><th>STATUS</th><th>AMOUNT</th></tr></thead>
+                    <tbody>
+                        <tr><td>Oct 02</td><td>Server Costs (AWS)</td><td>Completed</td><td class="amt-neg">- ₹ 12,500</td></tr>
+                        <tr><td>Sep 29</td><td>Hackathon Prize Money</td><td><span style="color:var(--quantum-green)">Credited</span></td><td class="amt-pos">+ ₹ 1,00,000</td></tr>
+                        <tr><td>Sep 25</td><td>Patent Filing Fee</td><td>Completed</td><td class="amt-neg">- ₹ 8,000</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="security-console">
+            <div class="console-header">
+                <span><i class="fas fa-terminal"></i> QUANTUM CORE</span>
+                <div id="sys-led" class="led on"></div>
+            </div>
+
+            <div class="terminal" id="terminal">
+                > [SYSTEM] Node Initialized.<br>
+                > [INFO] Saffan logged in.<br>
+                > [NET] Connected to Python Backend.<br>
+                > [WAIT] Ready...
+            </div>
+
+            <div style="margin-top:auto;">
+                <p style="font-size:0.75rem; color:#64748b; margin-bottom:8px;">PENETRATION TESTING LAB</p>
+                <button id="btn-hack" class="btn-hack" onclick="toggleHack()">
+                    <i class="fas fa-bug"></i> Simulate Attack: OFF
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal-success" class="modal-overlay"><div class="modal-box"><i class="fas fa-check-circle" style="font-size:3rem; color:var(--quantum-green); margin-bottom:15px;"></i><h3>Transfer Successful</h3><p>Secured Transaction.</p><button onclick="closeModal('modal-success')" style="margin-top:20px; padding:10px 25px; background:var(--sbi-blue); color:white; border:none; border-radius:5px; cursor:pointer;">Done</button></div></div>
+    
+    <div id="modal-hack" class="modal-overlay"><div class="modal-box"><i class="fas fa-skull-crossbones" style="font-size:3rem; color:var(--alert-red); margin-bottom:15px;"></i><h3 style="color:var(--alert-red);">DATA COMPROMISED</h3><p>Standard Encryption Broken.<br>Hacker Intercepted Funds.</p><button onclick="closeModal('modal-hack')" style="margin-top:20px; padding:10px 25px; background:#e2e8f0; border:none; border-radius:5px; cursor:pointer;">Reset</button></div></div>
+    
+    <div id="modal-defended" class="modal-overlay"><div class="modal-box"><i class="fas fa-shield-virus" style="font-size:3rem; color:var(--quantum-green); margin-bottom:15px;"></i><h3 style="color:var(--quantum-green);">ATTACK BLOCKED</h3><p>AI Detected Interference.<br>Connection Cut Instantly.</p><button onclick="closeModal('modal-defended')" style="margin-top:20px; padding:10px 25px; background:var(--sbi-blue); color:white; border:none; border-radius:5px; cursor:pointer;">Done</button></div></div>
+
+    <script>
+        let mode = 'classical';
+        let isAttackOn = false;
+        const term = document.getElementById('terminal');
+        const led = document.getElementById('sys-led');
+        const hackBtn = document.getElementById('btn-hack');
+
+        function log(msg, color='#cbd5e1') {
+            const time = new Date().toLocaleTimeString('en-US',{hour12:false});
+            term.innerHTML += `<div style="color:${color}"><span style="opacity:0.5">[${time}]</span> ${msg}</div>`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('btn-cl').classList.remove('active');
+            document.getElementById('btn-qu').classList.remove('active');
+            
+            if(m === 'classical') {
+                document.getElementById('btn-cl').classList.add('active');
+                log("Switched to CLASSICAL (TLS)", '#ef4444');
+            } else {
+                document.getElementById('btn-qu').classList.add('active');
+                log("Switched to QUANTUM (E91)", '#00ff9d');
+            }
+        }
+
+        function toggleHack() {
+            isAttackOn = !isAttackOn;
+            if(isAttackOn) {
+                hackBtn.classList.add('active');
+                hackBtn.innerHTML = '<i class="fas fa-bug"></i> Simulate Attack: ON';
+                led.className = 'led alert';
+                log("⚠️ MITM ATTACK SIMULATION STARTED", '#ef4444');
+            } else {
+                hackBtn.classList.remove('active');
+                hackBtn.innerHTML = '<i class="fas fa-bug"></i> Simulate Attack: OFF';
+                led.className = 'led on';
+                log("Attack Simulation Stopped", '#cbd5e1');
+            }
+        }
+
+        async function startTx() {
+            log(`Initiating ${mode.toUpperCase()} Transfer...`, '#3b82f6');
+            
+            try {
+                // CALL PYTHON BACKEND
+                const response = await fetch('http://127.0.0.1:5000/process_transaction', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ mode: mode, attack: isAttackOn })
+                });
+                
+                const data = await response.json();
+                
+                if(data.status === 'hacked') {
+                    log("❌ " + data.message, '#ef4444');
+                    setTimeout(() => document.getElementById('modal-hack').style.display='flex', 1500);
+                } else if(data.status === 'defended') {
+                    log("🛡️ " + data.message, '#00ff9d');
+                    setTimeout(() => document.getElementById('modal-defended').style.display='flex', 1500);
+                } else {
+                    log("✅ " + data.message, '#fff');
+                    setTimeout(() => document.getElementById('modal-success').style.display='flex', 1000);
+                }
+            } catch(e) {
+                log("❌ Backend Offline. Run server.py", '#ef4444');
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display='none'; }
+    </script>
+</body>
+</html>
