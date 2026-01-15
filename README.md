@@ -7,6 +7,11 @@
 
 A comprehensive Quantum Random Number Generator system for defense and security applications, featuring quantum circuits, secure key distribution, AI anomaly detection, and real-time monitoring dashboard.
 
+## 🔑 TL;DR
+A hackathon-built quantum-secure communication prototype using
+QRNG + QKD (BB84/E91) + AES-GCM, with a live defense monitoring dashboard.
+Built as a **software simulation**, designed for real quantum hardware migration.
+
 ## Features
 
 - **Quantum Circuit Core**: True random bit generation using Hadamard gates and quantum measurement
@@ -15,6 +20,13 @@ A comprehensive Quantum Random Number Generator system for defense and security 
 - **Secure Communications**: AES-GCM encryption with quantum-derived keys
 - **Defense Dashboard**: Live monitoring for Satellite, Naval, Airborne, and Ground communications
 - **Hardware Ready**: Modular design for easy integration with physical quantum devices
+  
+  ## 🚧 Project Status
+- ✅ Functional QRNG & QKD simulations
+- ✅ Working Flask APIs
+- ✅ Live Dash monitoring dashboard
+- ⚠️ AI anomaly detection: rule-based prototype
+- ⚠️ Hardware integration: planned (not deployed)
 
 ## System Requirements
 
@@ -134,6 +146,13 @@ python test_protocols.py
 - **QBER Threshold**: <11% for secure communications
 - **Response Time**: <100ms for anomaly detection
 - **Scalability**: Multi-platform defense deployment
+  
+  ## 📚 What We Learned
+- Practical implementation of quantum circuits using Qiskit
+- Differences between simulated vs real quantum backends
+- QBER impact on key security
+- Designing crypto pipelines using quantum-derived keys
+- Building full-stack prototypes under hackathon constraints
 
 ## Development Team
 
